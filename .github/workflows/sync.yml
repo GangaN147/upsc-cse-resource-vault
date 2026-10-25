@@ -1,0 +1,30 @@
+name: Sync UPSC PYQs to Telegram
+
+on:
+  push:
+    paths:
+      - 'upsc_polity_pyqs_1991_2026_master.csv' # Triggers automatically whenever you update this CSV
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install pandas requests
+
+      - name: Run Telegram Auto-Poster
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+        run: |
+          python auto_poster.py
+          
